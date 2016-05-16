@@ -118,11 +118,12 @@ public class ItemTransaction
 
 List<SOInfo> sos = new List<SOInfo>();
 /*
-*1. 按照Item分组
-*2. 将Item需要的LPN按照Location分组
-*3. 构造报表需要的数据格式：每个Meta代表为报表上的一行数据，报表上某些行不需要显示的数据，我们就不构造
-*   例如：在显示Lpn信息的行上，我们就不构造ItemNumber、Description等信息
-*4. 将SO信息补齐在Meta对象上
+*1. 按照Item分组，对每组Item执行以下步骤：
+*   a. 将Item需要的LPN按照Location分组
+*   b. 构造报表需要的数据格式：每个Meta代表为报表上的一行数据，由于报表上显示的字段是统计信息，所以某些行上不需要显示的字段，我们就不构造这些字段
+*       例如：第一行会显示完整的Item信息，但是第二行的Item和第一行的Item是一样的，所以不再显示。
+             第二行仅需要显示不同的显示Lpn信息，我们就不构造ItemNumber、Description等信息，那么Meta对象上ItemNumber等信息就不再进行赋值
+*   c. 将SO信息补齐到Meta对象上
 */
 List<BatchBySellerReportMeta> metaDatas = new List<BatchBySellerReportMeta>();
 sos.SelectMany(so => so.ItemTransactions)
@@ -138,6 +139,7 @@ sos.SelectMany(so => so.ItemTransactions)
         
         var lpnGroup = lpns.GroupBy(lpn => lpn.Location).ToList();
         List<BatchBySellerReportMeta> subMetaDatas = new List<BatchBySellerReportMeta>();
+        
         for(int i=0;i<lpnGroup.Count;i++)
         {
             BatchBySellerReportMeta meta = new BatchBySellerReportMeta();
@@ -160,6 +162,7 @@ sos.SelectMany(so => so.ItemTransactions)
             }
            
         }         
+        
         for(int i=0; i<sos.count; i++)
         {
             subMetaDatas[i].SONumber = sos[i].SONumber;
