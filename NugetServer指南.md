@@ -76,7 +76,7 @@ VS2013以上版本应该已经集成。
     * Tools 》External Tools... 添加External Command
     * Tools 》 Cutomize... 》Commands 》Context menu... 》Project and Solution Context Menus | Project 》 Add Command 》 Tools
     
-    选择External Command n， n就是你要添加的External Command的序号。
+    选择External Command n， n就是你要添加的External Command的号
 4. Nuget Server是严格按照版本号来进行包管理的，如果同一个版本号的Package被推送到Nuget Server Feed，会覆盖之前的版本。但是本地引用的Package还是没有更新，原因是因为在引用Nuget Server Feed上的Package的时候，会在本地缓存，清空缓存即可。
 5. 如果一个Solution的Project都要用Nuget来进行包管理，并且它们之间存在依赖关系，则应该将依赖关系由弱到强进行打包并Push到Nuget Server。如果Pack的时候选择了IncludeReferencedProjects，引用关系强的Project会自动引用依赖关系弱的Project。
 
