@@ -1,0 +1,68 @@
+public class Token
+{
+    public TokenType Type{get;set;}
+
+    public string Value{get;set;}
+}
+
+public class SqlFormatter
+{
+    public string Format(string sqlString)
+    {
+        var tokens = this.Tokenize(sqlString);
+        
+        return Format(FlattenTokens(tokens));
+    }
+
+    private List<Token> FlattenTokens(List<Token> tokens)
+    {
+        var stack = new Stack();
+        foreach(var token in tokens)
+        {
+            stack.Push(token);
+            if(token.Value == ")")
+            {
+                var list = new List<stack>();
+                bool isMatched = false;
+                while(true)
+                {
+                    var each = stack.Pop();
+                    list.Add(each);
+                    if(each == "(")
+                    {
+                        isMatched = true;
+                        break;
+                    }
+                }
+                list.Reverse();            
+                var formattedText = Format(list);
+                if(!isMatched)
+                {
+                    formattedText += "-- Not matched )";
+                }
+                stack.Push(new Token(TokenType.Formatted, formattedText));
+            }            
+        }
+
+        return stack.ToList().Reverse();
+    }
+
+    private string Format(List<Token> tokens)
+    {
+        if(tokens.First().Value == "(" && tokens.Last().Value == ")")
+        {
+
+        }
+        else
+        {
+            
+        }
+    }
+
+    private List<Token> Tokenize(string sqlString)
+    {
+
+    }
+
+    
+}
